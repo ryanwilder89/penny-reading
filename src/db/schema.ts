@@ -23,6 +23,7 @@ export const sessions = sqliteTable('sessions', {
   startedAt: integer('started_at', { mode: 'timestamp' }),
   completedAt: integer('completed_at', { mode: 'timestamp' }),
   parentId: text('parent_id'),
+  parentNotes: text('parent_notes'),
 });
 
 export const wordChains = sqliteTable('word_chains', {
@@ -60,4 +61,12 @@ export const progress = sqliteTable('progress', {
   dateIntroduced: text('date_introduced'),
   dateMastered: text('date_mastered'),
   masteryCriteriaMet: integer('mastery_criteria_met', { mode: 'boolean' }).default(false),
+});
+
+export const reviewWords = sqliteTable('review_words', {
+  id: text('id').primaryKey(),
+  word: text('word').notNull(),
+  dateAdded: text('date_added').notNull(), // ISO Date string
+  nextReviewDate: text('next_review_date').notNull(), // ISO Date string
+  timesMissed: integer('times_missed').default(1).notNull(),
 });

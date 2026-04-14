@@ -13,12 +13,12 @@ export function getTodayLesson(progressData?: any) {
   return scopeAndSequence[0];
 }
 
-export function generateSessionPlan(lesson: any) {
+export function generateSessionPlan(lesson: any, errorWordsToReview: string[] = []) {
   return {
     lesson,
     activities: [
       { type: 'WARMUP', id: 'warmup-1' },
-      { type: 'REVIEW', id: 'review-1' },
+      { type: 'REVIEW', id: 'review-1', data: { extraReviewWords: errorWordsToReview } },
       { type: 'PRACTICE', id: 'practice-1' },
       { type: 'READ', id: 'read-1' }
     ]

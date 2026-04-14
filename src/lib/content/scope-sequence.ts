@@ -78,5 +78,85 @@ export const scopeAndSequence = [
     name: "CVC vs CVCe contrast drills",
     script: "Let's see the difference when we add the e.",
     words: ["cap", "cape", "bit", "bite", "hop", "hope", "tub", "tube"]
+  },
+  {
+    id: "suffix-s-es",
+    phase: 2,
+    order: 2.11,
+    name: "Suffixes: -s, -es",
+    script: "When we add an s or es to the end of a word, it can mean more than one.",
+    words: ["cats", "boxes", "wishes", "dogs", "dresses"]
+  },
+  {
+    id: "suffix-ing",
+    phase: 2,
+    order: 2.12,
+    name: "Suffixes: -ing (no change)",
+    script: "When we add -ing to an action, it means we are doing it right now.",
+    words: ["jumping", "running", "helping", "playing"]
+  },
+  {
+    id: "suffix-ed",
+    phase: 2,
+    order: 2.13,
+    name: "Suffixes: -ed (/t/, /d/, /ed/)",
+    script: "When we add -ed to the end of a word, it means it happened in the past.",
+    words: ["jumped", "played", "wanted", "liked"]
+  },
+  {
+    id: "vowel-ai-ay",
+    phase: 3,
+    order: 3.1,
+    name: "Vowel teams: ai, ay",
+    script: "Listen to the A sound. When A and I or A and Y go walking side by side, they make the long A sound together.",
+    words: ["rain", "play", "train", "stay", "wait", "say"]
+  },
+  {
+    id: "vowel-ee-ea",
+    phase: 3,
+    order: 3.2,
+    name: "Vowel teams: ee, ea",
+    script: "Two E's, or an E and an A, make the long E sound.",
+    words: ["tree", "read", "sleep", "beach", "green"]
+  },
+  {
+    id: "vowel-oa-ow",
+    phase: 3,
+    order: 3.3,
+    name: "Vowel teams: oa, ow (long o)",
+    script: "O and A, or O and W at the end of a word, make the long O sound.",
+    words: ["boat", "snow", "road", "grow", "coat"]
+  },
+  {
+    id: "vowel-ew-ue",
+    phase: 3,
+    order: 3.4,
+    name: "Vowel teams: ew, ue",
+    script: "These vowel teams say /oo/ or /yoo/.",
+    words: ["blew", "glue", "threw", "true", "new"]
+  },
+  {
+    id: "rcontrol-ar",
+    phase: 3,
+    order: 3.5,
+    name: "R-controlled: ar",
+    script: "When the bossy R stands next to an A, it says /ar/.",
+    words: ["car", "star", "park", "farm", "shark"]
+  },
+  {
+    id: "rcontrol-or",
+    phase: 3,
+    order: 3.6,
+    name: "R-controlled: or",
+    script: "When bossy R stands next to O, it says /or/.",
+    words: ["fork", "corn", "sport", "storm", "shore"]
+  },
+  {
+    id: "rcontrol-er-ir-ur",
+    phase: 3,
+    order: 3.7,
+    name: "R-controlled: er, ir, ur",
+    script: "These three bossy R pairs all make the same /er/ sound.",
+    words: ["her", "bird", "turn", "fern", "girl", "burn"]
   }
 ];

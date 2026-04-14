@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import WcpmChart from '@/components/progress/WcpmChart';
 import SessionHistory from '@/components/progress/SessionHistory';
+import GrowthRate from '@/components/progress/GrowthRate';
+import SkillsMap from '@/components/progress/SkillsMap';
 export default function Home() {
   const router = useRouter();
   const [currentUser, setCurrentUser] = useState<string | null>(null);
@@ -58,13 +60,22 @@ export default function Home() {
           </Link>
         </div>
 
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-           <WcpmChart data={[
-             { date: '2026-04-10', wcpm: 20 },
-             { date: '2026-04-11', wcpm: 22 },
-             { date: '2026-04-12', wcpm: 28 },
-             { date: '2026-04-14', wcpm: 30 }
-           ]} />
+         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+           {/* Left column: WcpmChart and Growth Rate */}
+           <div className="col-span-1 lg:col-span-2 flex flex-col gap-6">
+             <GrowthRate growthData={{ growthRatePerWeek: 2.1, status: 'green' }} />
+             <div className="bg-white p-6 rounded-xl border shadow-sm h-full">
+               <h4 className="text-lg font-bold mb-4 whitespace-nowrap">Fluency Progress (WCPM)</h4>
+               <WcpmChart data={[
+                 { date: '2026-04-10', wcpm: 20 },
+                 { date: '2026-04-11', wcpm: 22 },
+                 { date: '2026-04-12', wcpm: 28 },
+                 { date: '2026-04-14', wcpm: 30 }
+               ]} />
+             </div>
+           </div>
+
+           {/* Right column: SessionHistory and Quick actions */}
            <div className="flex flex-col gap-6">
              <SessionHistory history={[
                { date: '2026-04-14T00:00:00', lessonId: 'Lesson 13', durationMin: 13, wcpm: 30 },
@@ -80,6 +91,16 @@ export default function Home() {
                 </div>
              </div>
            </div>
+         </div>
+         
+         <div className="mt-8">
+            <SkillsMap progressMap={{
+              'blend-initial-l': 'MASTERED',
+              'blend-initial-r': 'MASTERED',
+              'blend-initial-s': 'IN_PROGRESS',
+              'blend-final': 'NOT_STARTED',
+              'ccvcc': 'NOT_STARTED'
+            }} />
          </div>
       </div>
     </main>
