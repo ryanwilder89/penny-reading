@@ -9,13 +9,10 @@ This test plan verifies the **Phase 1: Foundation** completion criteria as outli
 ---
 
 ## 1. Authentication & Setup
-### 1.1 Simple PIN Entry
+### 1.1 Direct Access
+- **Note**: PIN/Password entry is not a necessary feature and is not included in the MVP.
 - **Action**: Open the web app URL.
-- **Expected Result**: User is greeted with a simple PIN entry or password screen.
-- **Action**: Enter an incorrect PIN.
-- **Expected Result**: Access is denied with a simple error message.
-- **Action**: Enter the correct PIN.
-- **Expected Result**: User is successfully authenticated and redirected to the Daily Dashboard.
+- **Expected Result**: User is immediately greeted with the Application Shell and redirected to the Daily Dashboard (or calibration if first time).
 
 ### 1.2 Placement / Calibration Flow (First-time use)
 - **Action**: Log in as a new parent/user with no previous session data.

@@ -32,7 +32,7 @@
 | Backend | Node.js or Python (FastAPI) | Lightweight API for auth, data persistence, session state. |
 | Database | PostgreSQL or SQLite (if self-hosted) | Relational data: sessions, scores, lesson progress, word lists. |
 | Hosting | Developer's personal domain/server | No multi-tenant complexity. Single-family use. |
-| Auth | Simple PIN or password | Family use only. No OAuth, no user registration flow. |
+| Auth | None | Family use only. PIN/Password entry is not a necessary feature and is not included in the MVP. |
 | Audio | None in MVP | Parent provides auditory modeling in person. |
 
 ### Key Constraints
@@ -580,7 +580,7 @@ Each warmup type needs a bank of 30-50 items at appropriate difficulty levels:
 Tasks:
 1. Initialize project: React + TypeScript + Tailwind. Set up routing (React Router).
 2. Set up backend: API server with endpoints for sessions, progress, and content retrieval. Database schema per data model above.
-3. Implement authentication: simple PIN entry screen.
+3. Authentication (Optional): Skip for now. PIN/Password entry is not a necessary feature for the initial version.
 4. Build the Daily Dashboard (home screen) with static/mock data.
 5. Build the Word Building activity -- this is the most complex interactive component, so start here.
 6. Create the first batch of content: word lists and word chains for Phase 2 skills 2.1 through 2.4 (two-letter blends).
