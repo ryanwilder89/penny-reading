@@ -1,6 +1,42 @@
+"use client";
+
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
+  const router = useRouter();
+  const [currentUser, setCurrentUser] = useState<string | null>(null);
+
+  // Quick simulated login/user selection for testing
+  if (!currentUser) {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center p-4 md:p-8 bg-gray-50">
+        <div className="w-full max-w-md bg-white text-black p-8 rounded-xl shadow-xl flex flex-col gap-6 text-center">
+          <h1 className="text-3xl font-bold mb-4">Welcome</h1>
+          <p className="text-gray-600 mb-6 font-semibold">Select an option to test Phase 1 flows:</p>
+          
+          <button 
+            onClick={() => router.push('/placement')}
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-6 rounded-lg shadow-sm transition-colors text-lg"
+          >
+            Log in as New User
+            <div className="text-sm font-normal text-blue-100 mt-1">(Triggers Placement/Calibration)</div>
+          </button>
+
+          <button 
+            onClick={() => setCurrentUser('existing')}
+            className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 rounded-lg shadow-sm transition-colors text-lg"
+          >
+            Log in as Existing User
+            <div className="text-sm font-normal text-green-100 mt-1">(Shows Daily Dashboard)</div>
+          </button>
+        </div>
+      </main>
+    );
+  }
+
+  // Original Daily Dashboard UI (Shown to Existing Users)
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4 md:p-8">
       <div className="w-full max-w-4xl bg-white text-black p-6 md:p-8 rounded-xl shadow-xl flex flex-col gap-6">
