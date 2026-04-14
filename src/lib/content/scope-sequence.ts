@@ -30,5 +30,53 @@ export const scopeAndSequence = [
     name: "Final blends: -nd, -nk, -nt, -mp, -ft, -lt, -lk, -sk",
     script: "Now the blend is at the end of the word.",
     words: ["hand", "sink", "jump", "left", "milk", "desk"]
+  },
+  {
+    id: "ccvcc",
+    phase: 2,
+    order: 2.5,
+    name: "CCVCC closed syllables",
+    script: "These words are longer, but we can decode them.",
+    words: ["blink", "stamp", "trust", "blend", "crisp"]
+  },
+  {
+    id: "3-letter-blends",
+    phase: 2,
+    order: 2.6,
+    name: "Three-letter blends: spr, str, scr, spl, shr, thr",
+    script: "Sometimes three letters blank together.",
+    words: ["spring", "strap", "scrub", "split", "shred"]
+  },
+  {
+    id: "cvce-a",
+    phase: 2,
+    order: 2.7,
+    name: "CVCe / silent-e (a_e)",
+    script: "When there is an e at the end, it makes the vowel say its name.",
+    words: ["make", "cake", "lane", "tape", "game", "safe"]
+  },
+  {
+    id: "cvce-i",
+    phase: 2,
+    order: 2.8,
+    name: "CVCe / silent-e (i_e)",
+    script: "The e makes the i say its name.",
+    words: ["bike", "time", "five", "ride", "kite", "line"]
+  },
+  {
+    id: "cvce-ou",
+    phase: 2,
+    order: 2.9,
+    name: "CVCe / silent-e (o_e, u_e, e_e)",
+    script: "Let's practice the silent e with other vowels.",
+    words: ["rope", "home", "cube", "tune", "Pete"]
+  },
+  {
+    id: "cvce-contrast",
+    phase: 2,
+    order: 2.10,
+    name: "CVC vs CVCe contrast drills",
+    script: "Let's see the difference when we add the e.",
+    words: ["cap", "cape", "bit", "bite", "hop", "hope", "tub", "tube"]
   }
 ];

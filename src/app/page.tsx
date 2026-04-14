@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-
+import WcpmChart from '@/components/progress/WcpmChart';
+import SessionHistory from '@/components/progress/SessionHistory';
 export default function Home() {
   const router = useRouter();
   const [currentUser, setCurrentUser] = useState<string | null>(null);
@@ -57,20 +58,29 @@ export default function Home() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-           <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-              <h4 className="font-bold text-lg mb-2 text-gray-600">RECENT PROGRESS</h4>
-              <p className="text-md text-gray-800 mb-1">Last session: Mon Apr 14 - 13 min</p>
-              <p className="text-md text-gray-800">WCPM: <span className="font-bold text-xl">28</span> (accuracy: 94%)</p>
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+           <WcpmChart data={[
+             { date: '2026-04-10', wcpm: 20 },
+             { date: '2026-04-11', wcpm: 22 },
+             { date: '2026-04-12', wcpm: 28 },
+             { date: '2026-04-14', wcpm: 30 }
+           ]} />
+           <div className="flex flex-col gap-6">
+             <SessionHistory history={[
+               { date: '2026-04-14T00:00:00', lessonId: 'Lesson 13', durationMin: 13, wcpm: 30 },
+               { date: '2026-04-12T00:00:00', lessonId: 'Lesson 12', durationMin: 15, wcpm: 28 },
+               { date: '2026-04-11T00:00:00', lessonId: 'Lesson 11', durationMin: 12, wcpm: 22 }
+             ]} />
+             
+             <div className="bg-gray-50 p-6 rounded-xl border border-gray-200 flex flex-col gap-3 justify-center shadow-sm">
+                <h4 className="font-bold text-lg mb-2 text-gray-800">QUICK ACTIONS</h4>
+                <div className="flex gap-4">
+                  <button className="flex-1 bg-blue-100 hover:bg-blue-200 text-blue-800 font-semibold py-3 rounded-lg shadow-sm border border-blue-200 transition-colors">Fluency Check</button>
+                  <button className="flex-1 bg-purple-100 hover:bg-purple-200 text-purple-800 font-semibold py-3 rounded-lg shadow-sm border border-purple-200 transition-colors">Free Practice</button>
+                </div>
+             </div>
            </div>
-           <div className="bg-gray-50 p-6 rounded-xl border border-gray-200 flex flex-col gap-3 justify-center">
-              <h4 className="font-bold text-lg mb-2 text-gray-600">QUICK ACTIONS</h4>
-              <div className="flex gap-4">
-                <button className="flex-1 bg-blue-100 hover:bg-blue-200 text-blue-800 font-semibold py-3 rounded-lg shadow-sm border border-blue-200 transition-colors">Fluency Check</button>
-                <button className="flex-1 bg-purple-100 hover:bg-purple-200 text-purple-800 font-semibold py-3 rounded-lg shadow-sm border border-purple-200 transition-colors">Free Practice</button>
-              </div>
-           </div>
-        </div>
+         </div>
       </div>
     </main>
   );
