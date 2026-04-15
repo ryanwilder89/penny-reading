@@ -1,11 +1,39 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 import SessionFlow from '@/components/session/SessionFlow';
 import SessionComplete from '@/components/session/SessionComplete';
 import Link from 'next/link';
 
-export default function SessionPage() {
+function SessionPageContent() {
+  const searchParams = useSearchParams();
+  const patternId = searchParams.get('patternId');
   const [completed, setCompleted] = useState(false);
+  const [plan, setPlan] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    fetch(`/api/session/plan${patternId ? `?patternId=${patternId}` : ''}`)
+      .then(res => res.json())
+      .then(data => {
+        setPlan(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Failed to load session plan', err);
+        setLoading(false);
+      });
+  }, [patternId]);
+
+  if (loading || !plan) {
+    return (
+      <main className="min-h-screen bg-gray-50 flex flex-col pt-12 items-center">
+        <div className="text-xl font-semibold text-gray-500 animate-pulse">Loading session...</div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-gray-50 flex flex-col pt-12">
@@ -22,12 +50,20 @@ export default function SessionPage() {
       
       {!completed ? (
         <SessionFlow 
-          lesson={{ id: 'mock-lesson' }} 
+          plan={plan} 
           onSessionComplete={() => setCompleted(true)} 
         />
       ) : (
         <SessionComplete />
       )}
     </main>
+  );
+}
+
+export default function SessionPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <SessionPageContent />
+    </Suspense>
   );
 }

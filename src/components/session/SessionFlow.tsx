@@ -4,13 +4,11 @@ import FlashcardReview from '../activities/FlashcardReview';
 import WordBuilding from '../activities/WordBuilding';
 import WordChain from '../activities/WordChain';
 import PassageReader from '../activities/PassageReader';
-import { generateSessionPlan } from '@/lib/engine/session-planner';
 import { Passage } from '@/lib/content/passages';
 
-export default function SessionFlow({ lesson, onSessionComplete }: { lesson: any, onSessionComplete: () => void }) {
+export default function SessionFlow({ plan, onSessionComplete }: { plan: any, onSessionComplete: () => void }) {
   const [currentStep, setCurrentStep] = useState(0);
-  const plan = generateSessionPlan(lesson);
-  
+
   const handleNext = () => {
     if (currentStep < plan.activities.length - 1) {
       setCurrentStep(currentStep + 1);
@@ -21,37 +19,33 @@ export default function SessionFlow({ lesson, onSessionComplete }: { lesson: any
 
   const activity = plan.activities[currentStep];
 
-  // Dummy content based on type (MVP mock)
+  // Use dynamic content from plan
   if (activity.type === 'WARMUP') {
     return <PhonemicWarmup 
-      prompts={[
-        { instruction: "Say 'stop'. Now say it without the /s/.", answer: "top" },
-        { instruction: "Say 'flat'. Change /f/ to /s/.", answer: "slat" }
-      ]}
+      prompts={activity.data?.prompts || []}
       onComplete={handleNext}
     />;
   }
 
   if (activity.type === 'REVIEW') {
     return <FlashcardReview 
-      words={["clap", "sled", "drum", "frog", "jump"]}
+      words={activity.data?.words || []}
       onComplete={handleNext}
     />;
   }
 
   if (activity.type === 'PRACTICE') {
-    // Alternate between word building and chain. Let's do chain for now
     return <WordChain 
-      initialWord="flat"
-      targetWord="flop"
-      availableLetters={['o', 'i', 's', 'p']}
+      initialWord={activity.data?.initialWord || "flat"}
+      targetWord={activity.data?.targetWord || "flop"}
+      availableLetters={activity.data?.availableLetters || ['o', 'i', 's', 'p']}
       onCorrect={handleNext}
     />;
   }
 
   if (activity.type === 'READ') {
     return <PassageReader 
-      passage={{ id: 'mock', title: 'The Sled', text: 'Sam had a big red sled. He went to the hill with his dog, Rex. The sled slid down the hill. Rex ran and ran. Sam was glad.', wordCount: 28, maxPatternId: '2.1', patternsUsed: [] }}
+      passage={activity.data?.passage || { id: 'mock', title: 'The Sled', text: 'Sam had a big red sled...', wordCount: 28, maxPatternId: '2.1', patternsUsed: [] }}
       onComplete={(stats) => {
         // Here we would sync stats to API
         handleNext();

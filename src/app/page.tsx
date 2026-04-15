@@ -10,6 +10,24 @@ import SkillsMap from '@/components/progress/SkillsMap';
 export default function Home() {
   const router = useRouter();
   const [currentUser, setCurrentUser] = useState<string | null>(null);
+  const [dashboardData, setDashboardData] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (currentUser === 'existing') {
+      setLoading(true);
+      fetch('/api/dashboard')
+        .then(res => res.json())
+        .then(data => {
+          setDashboardData(data);
+          setLoading(false);
+        })
+        .catch(err => {
+          console.error('Error loading dashboard data', err);
+          setLoading(false);
+        });
+    }
+  }, [currentUser]);
 
   // Quick simulated login/user selection for testing
   if (!currentUser) {
@@ -39,23 +57,37 @@ export default function Home() {
     );
   }
 
+  if (currentUser === 'existing' && (loading || !dashboardData)) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-gray-50">
+        <div className="text-xl font-semibold text-gray-500 animate-pulse">Loading dashboard...</div>
+      </main>
+    );
+  }
+
+  const { today, streak, currentLesson, fluencyProgress, sessionHistory, skillsMap } = dashboardData;
+
+  // Format today's date
+  const dateObj = new Date(today);
+  const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+
   // Original Daily Dashboard UI (Shown to Existing Users)
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4 md:p-8">
       <div className="w-full max-w-4xl bg-white text-black p-6 md:p-8 rounded-xl shadow-xl flex flex-col gap-6">
         <div className="flex justify-between items-center border-b pb-4">
-          <h2 className="text-2xl font-semibold">Today: Tuesday, April 15</h2>
+          <h2 className="text-2xl font-semibold">Today: {formattedDate}</h2>
           <div className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full font-bold">
-            Streak: 8 Days 🔥
+            Streak: {streak} Days 🔥
           </div>
         </div>
 
         <div className="bg-gray-50 border-2 border-dashed border-gray-300 p-6 md:p-10 rounded-xl text-center">
           <h3 className="text-xl font-bold mb-2">TODAY'S SESSION</h3>
-          <p className="text-2xl font-semibold text-gray-800 mb-2">Lesson 14: Silent-e (i_e)</p>
-          <p className="text-lg text-gray-500 mb-8">Type: Reinforce • Est. time: 12 min</p>
+          <p className="text-2xl font-semibold text-gray-800 mb-2">{currentLesson.name}</p>
+          <p className="text-lg text-gray-500 mb-8">Type: {currentLesson.type} • Est. time: {currentLesson.estTime} min</p>
           
-          <Link href="/session" className="inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-5 px-12 md:px-16 rounded-full shadow-lg text-2xl transition-transform transform hover:scale-105 active:scale-95">
+          <Link href={`/session?patternId=${currentLesson.id}`} className="inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-5 px-12 md:px-16 rounded-full shadow-lg text-2xl transition-transform transform hover:scale-105 active:scale-95">
             START SESSION
           </Link>
         </div>
@@ -66,22 +98,13 @@ export default function Home() {
              <GrowthRate growthData={{ growthRatePerWeek: 2.1, status: 'green' }} />
              <div className="bg-white p-6 rounded-xl border shadow-sm h-full">
                <h4 className="text-lg font-bold mb-4 whitespace-nowrap">Fluency Progress (WCPM)</h4>
-               <WcpmChart data={[
-                 { date: '2026-04-10', wcpm: 20 },
-                 { date: '2026-04-11', wcpm: 22 },
-                 { date: '2026-04-12', wcpm: 28 },
-                 { date: '2026-04-14', wcpm: 30 }
-               ]} />
+               <WcpmChart data={fluencyProgress} />
              </div>
            </div>
 
            {/* Right column: SessionHistory and Quick actions */}
            <div className="flex flex-col gap-6">
-             <SessionHistory history={[
-               { date: '2026-04-14T00:00:00', lessonId: 'Lesson 13', durationMin: 13, wcpm: 30 },
-               { date: '2026-04-12T00:00:00', lessonId: 'Lesson 12', durationMin: 15, wcpm: 28 },
-               { date: '2026-04-11T00:00:00', lessonId: 'Lesson 11', durationMin: 12, wcpm: 22 }
-             ]} />
+             <SessionHistory history={sessionHistory} />
              
              <div className="bg-gray-50 p-6 rounded-xl border border-gray-200 flex flex-col gap-3 justify-center shadow-sm">
                 <h4 className="font-bold text-lg mb-2 text-gray-800">QUICK ACTIONS</h4>
@@ -94,13 +117,7 @@ export default function Home() {
          </div>
          
          <div className="mt-8">
-            <SkillsMap progressMap={{
-              'blend-initial-l': 'MASTERED',
-              'blend-initial-r': 'MASTERED',
-              'blend-initial-s': 'IN_PROGRESS',
-              'blend-final': 'NOT_STARTED',
-              'ccvcc': 'NOT_STARTED'
-            }} />
+            <SkillsMap progressMap={skillsMap} />
          </div>
       </div>
     </main>
