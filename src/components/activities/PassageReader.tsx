@@ -11,7 +11,7 @@ export default function PassageReader({ passage, onComplete }: PassageReaderProp
   const [isRunning, setIsRunning] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60); // 1 minute
   const [mistakes, setMistakes] = useState<Set<number>>(new Set());
-  const words = passage.text.split(' ');
+  const words = (passage.content || passage.text || '').split(' ');
 
   useEffect(() => {
     let timer: NodeJS.Timeout;

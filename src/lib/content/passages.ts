@@ -1,7 +1,8 @@
 export interface Passage {
   id: string;
   title: string;
-  text: string;
+  text?: string;
+  content?: string;
   wordCount: number;
   maxPatternId: string;
   patternsUsed: string[];
