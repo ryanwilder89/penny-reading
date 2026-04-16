@@ -14,6 +14,17 @@ export async function evaluatePatternMastery(patternId: string) {
     .orderBy(desc(fluencyScores.date))
     .limit(2);
 
+  // Not mastered yet, but log an in-progress record if one doesn't exist
+  const existingProgress = await db.select().from(progress).where(eq(progress.patternId, patternId)).all();
+  if (!existingProgress || existingProgress.length === 0) {
+    await db.insert(progress).values({
+      patternId,
+      status: 'IN_PROGRESS',
+      accuracyHistory: [],
+      dateIntroduced: new Date().toISOString(),
+    });
+  }
+
   if (recentScores.length < 2) {
     // Need at least 2 sessions to prove mastery
     return false;
@@ -27,9 +38,9 @@ export async function evaluatePatternMastery(patternId: string) {
 
   if (isMastered) {
     // Update progress table
-    const existingProgress = await db.select().from(progress).where(eq(progress.patternId, patternId)).all();
+    const existingProgressCheck = await db.select().from(progress).where(eq(progress.patternId, patternId)).all();
     
-    if (existingProgress && existingProgress.length > 0) {
+    if (existingProgressCheck && existingProgressCheck.length > 0) {
       await db.update(progress)
         .set({ status: 'MASTERED', dateMastered: new Date().toISOString() })
         .where(eq(progress.patternId, patternId));
@@ -44,16 +55,6 @@ export async function evaluatePatternMastery(patternId: string) {
     }
 
     return true;
-  }
-
-  // Not mastered yet, but log an in-progress record if one doesn't exist
-  const existingProgress = await db.select().from(progress).where(eq(progress.patternId, patternId)).all();
-  if (!existingProgress || existingProgress.length === 0) {
-    await db.insert(progress).values({
-      patternId,
-      status: 'IN_PROGRESS',
-      dateIntroduced: new Date().toISOString(),
-    });
   }
 
   return false;

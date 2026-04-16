@@ -17,7 +17,7 @@ export default function SessionFlow({ plan, onSessionComplete }: { plan: any, on
     sessionId: `sess_${Date.now()}`,
     startedAt: Date.now(),
     completedAt: null as number | null,
-    lessonId: plan.lessonId || 'unknown',
+    lessonId: plan.lesson?.id || 'unknown',
     troubleWords: [] as string[],
     reviewedWords: [] as string[],
     fluencyStats: null as any

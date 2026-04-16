@@ -15,7 +15,7 @@ This document tracks the features, bugs, and upcoming phases for the Penny's Rea
     - [x] Spaced Repetition (SM-2 Lite) for flashcards.
     - [x] Mastery Evaluation (Accuracy/WCPM thresholds).
     - [ ] ⚠️ Automatic Curriculum Advancement.
-        - *Bug: Dashboard still shows "Short a (CVC)" even after mastery criteria met.*
+        - *Bug: Dashboard doesn't update after 2 successful sessions, which should define mastery.*
 
 ---
 
@@ -26,8 +26,9 @@ This document tracks the features, bugs, and upcoming phases for the Penny's Rea
 - [ ] **Growth Rate Dashboard**: Implement the rolling 4-week WCPM growth rate chart with color-coded alerts.
 - [ ] **Content Expansion**: Source and seed all Phase 2 (Skills 2.1 - 2.13) and Phase 3 (Skills 3.1 - 3.7) content.
 - [ ] **Settings Menu**: Build the manual override controls for patterns and mastery calibration.
+- [ ] **Dashboard**: Recent sessions data not accurate (0 WCPM).
 - [ ] **Parent Notes History**: Create a view to read previous session notes and observations.
-
+- [ ] **Multi-Parent Sync**: Verify seamless experience when switching between parent accounts/devices. Support via login credentials..
 ---
 
 ## 🛠️ Known Issues & Bugs
@@ -45,4 +46,4 @@ This document tracks the features, bugs, and upcoming phases for the Penny's Rea
 - [ ] **Nonsense Word Practice**: Generate pseudo-words to isolate decoding skills.
 - [ ] **Spelling Dictation Mode**: Extension of Word Building for active spelling practice.
 - [ ] **Echo Reading Mode**: Support for sentence-level highlighting.
-- [ ] **Multi-Parent Sync**: Verify seamless experience when switching between parent accounts/devices.
+
