@@ -1,5 +1,5 @@
 import { db } from './index';
-import { phonicsPatterns, words, decodablePassages } from './schema';
+import { phonicsPatterns, words, decodablePassages, sessions, wordChains, fluencyScores, progress, reviewWords } from './schema';
 import { seedPhonicsPatterns, seedWords, seedDecodablePassages } from '../data/seed-data';
 
 async function main() {
@@ -9,6 +9,11 @@ async function main() {
   db.delete(phonicsPatterns).run();
   db.delete(words).run();
   db.delete(decodablePassages).run();
+  db.delete(sessions).run();
+  db.delete(wordChains).run();
+  db.delete(fluencyScores).run();
+  db.delete(progress).run();
+  db.delete(reviewWords).run();
 
   // 2. Insert new data
   if (seedPhonicsPatterns.length > 0) {
