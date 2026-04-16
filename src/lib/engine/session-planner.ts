@@ -53,7 +53,7 @@ export async function generateSessionPlan(patternId?: string) {
         data: {
           initialWord: allWords[0]?.text || "flat",
           targetWord: allWords[1]?.text || "flop",
-          availableLetters: ['o', 'i', 's', 'p']
+          availableLetters: Array.from(new Set([...(allWords[1]?.text || "flop").split(''), 'o', 'i', 's', 'p', 'm', 'a']))
         }
       },
       { 
