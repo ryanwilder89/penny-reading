@@ -3,22 +3,29 @@ import ParentPrompt from '../ui/ParentPrompt';
 
 interface FlashcardReviewProps {
   words: string[];
-  onComplete: (accuracy: number) => void;
+  onComplete: (stats: { accuracy: number; incorrectWords: string[] }) => void;
 }
 
 export default function FlashcardReview({ words, onComplete }: FlashcardReviewProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
+  const [incorrectWords, setIncorrectWords] = useState<string[]>([]);
 
   const handleScore = (isCorrect: boolean) => {
     let newCount = correctCount;
     if (isCorrect) newCount += 1;
     setCorrectCount(newCount);
 
+    const newIncorrect = isCorrect ? incorrectWords : [...incorrectWords, words[currentIndex]];
+    if (!isCorrect) setIncorrectWords(newIncorrect);
+
     if (currentIndex < words.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      onComplete(Math.round((newCount / words.length) * 100));
+      onComplete({
+        accuracy: Math.round((newCount / words.length) * 100),
+        incorrectWords: newIncorrect
+      });
     }
   };
 

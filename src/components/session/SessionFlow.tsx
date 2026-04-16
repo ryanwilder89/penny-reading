@@ -1,4 +1,6 @@
+"use client";
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import PhonemicWarmup from '../activities/PhonemicWarmup';
 import FlashcardReview from '../activities/FlashcardReview';
 import WordBuilding from '../activities/WordBuilding';
@@ -8,11 +10,35 @@ import { Passage } from '@/lib/content/passages';
 
 export default function SessionFlow({ plan, onSessionComplete }: { plan: any, onSessionComplete: () => void }) {
   const [currentStep, setCurrentStep] = useState(0);
+  const router = useRouter();
 
-  const handleNext = () => {
+  // Session Log State
+  const [sessionLog, setSessionLog] = useState({
+    sessionId: `sess_${Date.now()}`,
+    startedAt: Date.now(),
+    completedAt: null as number | null,
+    lessonId: plan.lessonId || 'unknown',
+    troubleWords: [] as string[],
+    fluencyStats: null as any
+  });
+
+  const handleNext = async () => {
     if (currentStep < plan.activities.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
+      // Final step reached, let's complete session
+      const finalLog = { ...sessionLog, completedAt: Date.now() };
+      
+      try {
+        await fetch('/api/progress/session-complete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(finalLog)
+        });
+      } catch (error) {
+        console.error("Failed to save session:", error);
+      }
+      
       onSessionComplete();
     }
   };
@@ -30,7 +56,15 @@ export default function SessionFlow({ plan, onSessionComplete }: { plan: any, on
   if (activity.type === 'REVIEW') {
     return <FlashcardReview 
       words={activity.data?.words || []}
-      onComplete={handleNext}
+      onComplete={(stats) => {
+        if (stats.incorrectWords.length > 0) {
+          setSessionLog(prev => ({ 
+             ...prev, 
+             troubleWords: [...prev.troubleWords, ...stats.incorrectWords] 
+          }));
+        }
+        handleNext();
+      }}
     />;
   }
 
@@ -47,7 +81,7 @@ export default function SessionFlow({ plan, onSessionComplete }: { plan: any, on
     return <PassageReader 
       passage={activity.data?.passage || { id: 'mock', title: 'The Sled', text: 'Sam had a big red sled...', wordCount: 28, maxPatternId: '2.1', patternsUsed: [] }}
       onComplete={(stats) => {
-        // Here we would sync stats to API
+        setSessionLog(prev => ({ ...prev, fluencyStats: stats }));
         handleNext();
       }}
     />;
