@@ -1,6 +1,6 @@
 import { db } from './index';
 import { words, decodablePassages, sessions, progress, reviewWords, fluencyScores } from './schema';
-import { desc, eq } from 'drizzle-orm';
+import { desc, eq, lte } from 'drizzle-orm';
 
 // Basic CRUD Operations to expose Database to the application layer
 
@@ -24,6 +24,11 @@ export async function getReviewWords() {
   return db.select().from(reviewWords).all();
 }
 
+export async function getDueReviewWords() {
+  const todayStr = new Date().toISOString();
+  return db.select().from(reviewWords).where(lte(reviewWords.nextReviewDate, todayStr)).all();
+}
+
 export async function saveSessionResults(payload: any) {
   const sessionDate = new Date(payload.completedAt || Date.now()).toISOString();
 
@@ -37,26 +42,62 @@ export async function saveSessionResults(payload: any) {
     parentId: 'default',
   }).onConflictDoNothing();
 
-  // 2. Queue trouble words
-  if (payload.troubleWords && payload.troubleWords.length > 0) {
-    // deduplicate words just in case
-    const uniqueWords = Array.from(new Set(payload.troubleWords)) as string[];
+  // 2. Queue trouble words & advance correctly reviewed words
+  const troubleWordsSet = new Set(payload.troubleWords || []);
+  const reviewedWordsSet = new Set(payload.reviewedWords || []);
+
+  // Process all words that were explicitly reviewed (e.g., in Flashcards)
+  for (const word of Array.from(reviewedWordsSet) as string[]) {
+    const isMistake = troubleWordsSet.has(word);
+    troubleWordsSet.delete(word); // Remove so we don't process it twice
+
+    const existing = await db.select().from(reviewWords).where(eq(reviewWords.word, word)).all();
     
-    for (const word of uniqueWords) {
-      const existing = await db.select().from(reviewWords).where(eq(reviewWords.word, word)).all();
-      if (existing && existing.length > 0) {
+    if (existing && existing.length > 0) {
+      if (isMistake) {
+        // Reset interval to 1 day
+        const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
         await db.update(reviewWords)
-          .set({ timesMissed: existing[0].timesMissed + 1 })
+          .set({ timesMissed: existing[0].timesMissed + 1, nextReviewDate: tomorrow })
           .where(eq(reviewWords.id, existing[0].id));
       } else {
+        // Answered correctly! Increase interval by 3 days
+        const nextDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
+        await db.update(reviewWords)
+          .set({ nextReviewDate: nextDate })
+          .where(eq(reviewWords.id, existing[0].id));
+      }
+    } else if (isMistake) {
+        // Somehow it was reviewed but not in the DB, and missed.
+        const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
         await db.insert(reviewWords).values({
           id: `rw_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
           word: word,
           dateAdded: sessionDate,
-          nextReviewDate: sessionDate,
+          nextReviewDate: tomorrow,
           timesMissed: 1,
         });
-      }
+    }
+  }
+
+  // Any remaining trouble words were NOT from the formal review (e.g. Passage Reader)
+  // Queue them up for tomorrow.
+  for (const word of Array.from(troubleWordsSet) as string[]) {
+    const existing = await db.select().from(reviewWords).where(eq(reviewWords.word, word)).all();
+    const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+    
+    if (existing && existing.length > 0) {
+      await db.update(reviewWords)
+        .set({ timesMissed: existing[0].timesMissed + 1, nextReviewDate: tomorrow })
+        .where(eq(reviewWords.id, existing[0].id));
+    } else {
+      await db.insert(reviewWords).values({
+        id: `rw_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
+        word: word,
+        dateAdded: sessionDate,
+        nextReviewDate: tomorrow,
+        timesMissed: 1,
+      });
     }
   }
 

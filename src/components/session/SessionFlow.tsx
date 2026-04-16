@@ -19,6 +19,7 @@ export default function SessionFlow({ plan, onSessionComplete }: { plan: any, on
     completedAt: null as number | null,
     lessonId: plan.lessonId || 'unknown',
     troubleWords: [] as string[],
+    reviewedWords: [] as string[],
     fluencyStats: null as any
   });
 
@@ -57,12 +58,11 @@ export default function SessionFlow({ plan, onSessionComplete }: { plan: any, on
     return <FlashcardReview 
       words={activity.data?.words || []}
       onComplete={(stats) => {
-        if (stats.incorrectWords.length > 0) {
-          setSessionLog(prev => ({ 
-             ...prev, 
-             troubleWords: [...prev.troubleWords, ...stats.incorrectWords] 
-          }));
-        }
+        setSessionLog(prev => ({ 
+           ...prev, 
+           reviewedWords: [...prev.reviewedWords, ...(activity.data?.words || [])],
+           troubleWords: [...prev.troubleWords, ...stats.incorrectWords] 
+        }));
         handleNext();
       }}
     />;

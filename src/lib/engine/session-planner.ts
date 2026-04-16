@@ -1,11 +1,24 @@
 import { db } from '@/db/index';
-import { phonicsPatterns, words, decodablePassages, reviewWords } from '@/db/schema';
+import { phonicsPatterns, words, decodablePassages, progress } from '@/db/schema';
 import { asc, eq } from 'drizzle-orm';
+import { getDueReviewWords } from '@/db/queries';
 
 export async function getTodayLesson(progressData?: any) {
-  // If no progress, start at the first lesson
+  // Query all patterns in order
   const allPatterns = await db.select().from(phonicsPatterns).orderBy(asc(phonicsPatterns.sequenceOrder));
-  return allPatterns[0];
+  // Query all progress
+  const allProgress = await db.select().from(progress).all();
+  
+  // Find the first pattern that is NOT mastered
+  for (const pattern of allPatterns) {
+    const patternProgress = allProgress.find(p => p.patternId === pattern.id);
+    if (!patternProgress || patternProgress.status !== 'MASTERED') {
+      return pattern;
+    }
+  }
+
+  // If all mastered, return the last one
+  return allPatterns[allPatterns.length - 1];
 }
 
 export async function generateSessionPlan(patternId?: string) {
@@ -22,7 +35,7 @@ export async function generateSessionPlan(patternId?: string) {
   }
 
   const allWords = await db.select().from(words).limit(20);
-  const reviewWordsReq = await db.select().from(reviewWords).limit(5);
+  const reviewWordsReq = await getDueReviewWords();
 
   const patternPassages = await db.select().from(decodablePassages).where(eq(decodablePassages.maxPatternId, currentPattern.id));
   const targetPassage = patternPassages.length > 0 ? patternPassages[0] : (await db.select().from(decodablePassages).limit(1))[0];
@@ -44,7 +57,7 @@ export async function generateSessionPlan(patternId?: string) {
         type: 'REVIEW', 
         id: 'review-1', 
         data: { 
-          words: reviewWordsReq.length > 0 ? reviewWordsReq.map(w => w.word) : ['clap', 'sled', 'drum', 'frog', 'jump']
+          words: reviewWordsReq.length > 0 ? reviewWordsReq.map(w => w.word).slice(0, 5) : ['clap', 'sled', 'drum', 'frog', 'jump']
         } 
       },
       { 

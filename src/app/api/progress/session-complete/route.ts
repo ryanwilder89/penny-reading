@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { saveSessionResults } from '@/db/queries';
+import { evaluatePatternMastery } from '@/lib/engine/mastery-evaluator';
 
 export async function POST(request: Request) {
   try {
@@ -12,6 +13,11 @@ export async function POST(request: Request) {
 
     // Attempt to save to database
     await saveSessionResults(payload);
+    
+    // Evaluate mastery asynchronously without blocking the response
+    evaluatePatternMastery(payload.lessonId).catch(err => {
+      console.error('Error evaluating mastery:', err);
+    });
 
     return NextResponse.json({ success: true, message: 'Session saved successfully' });
   } catch (error: any) {
