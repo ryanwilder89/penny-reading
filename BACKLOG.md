@@ -1,0 +1,48 @@
+# Penny's Reading Practice - Project Backlog
+
+This document tracks the features, bugs, and upcoming phases for the Penny's Reading Practice application.
+
+---
+
+## ✅ Completed Tasks (Phase 1 & Phase 2 Foundation)
+
+- [x] **Database Setup**: SQLite with Drizzle ORM configured.
+- [x] **Content Seeding**: Script developed to seed phonics patterns, words, and passages.
+- [x] **API Infrastructure**: Dashboard and Session Plan endpoints implemented.
+- [x] **Core Session Activities**: Warmup, Flashcard Review, Word Building, Word Chain, and Passage Reader components built.
+- [x] **State Persistence**: Session interaction logging and completion persistence (Step 4).
+- [x] **Engine Logic**: 
+    - [x] Spaced Repetition (SM-2 Lite) for flashcards.
+    - [x] Mastery Evaluation (Accuracy/WCPM thresholds).
+    - [ ] ⚠️ Automatic Curriculum Advancement.
+        - *Bug: Dashboard still shows "Short a (CVC)" even after mastery criteria met.*
+
+---
+
+## 📋 High Priority (Phase 2 & 3 MVP Polish)
+
+- [ ] **Placement Flow**: Implement the initial calibration/placement assessment for new users.
+- [ ] **Skills Map**: Build the interactive visual grid showing mastered vs. in-progress patterns.
+- [ ] **Growth Rate Dashboard**: Implement the rolling 4-week WCPM growth rate chart with color-coded alerts.
+- [ ] **Content Expansion**: Source and seed all Phase 2 (Skills 2.1 - 2.13) and Phase 3 (Skills 3.1 - 3.7) content.
+- [ ] **Settings Menu**: Build the manual override controls for patterns and mastery calibration.
+- [ ] **Parent Notes History**: Create a view to read previous session notes and observations.
+
+---
+
+## 🛠️ Known Issues & Bugs
+
+- [x] **Bug (Fixed)**: Word Chain `availableLetters` generation logic was missing required characters.
+- [x] **Bug (Fixed)**: `PassageReader` was attempting to read `.text` instead of `.content`.
+- [ ] **UX Polish**: Improve transition animations between session activities.
+- [ ] **UX Polish**: Add a loading state spinner to the "Return to Dashboard" button.
+- [ ] **UX Polish**: Green checkmark after completing a session should fade to avoid conflicting with notes field.
+
+---
+
+## 🚀 Future Phases (Post-MVP)
+
+- [ ] **Nonsense Word Practice**: Generate pseudo-words to isolate decoding skills.
+- [ ] **Spelling Dictation Mode**: Extension of Word Building for active spelling practice.
+- [ ] **Echo Reading Mode**: Support for sentence-level highlighting.
+- [ ] **Multi-Parent Sync**: Verify seamless experience when switching between parent accounts/devices.
