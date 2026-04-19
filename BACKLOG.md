@@ -14,17 +14,17 @@ This document tracks the features, bugs, and upcoming phases for the Penny's Rea
 - [x] **Engine Logic**: 
     - [x] Spaced Repetition (SM-2 Lite) for flashcards.
     - [x] Mastery Evaluation (Accuracy/WCPM thresholds).
-    - [ ] ⚠️ Automatic Curriculum Advancement.
-        - *Bug: Dashboard doesn't update after 2 successful sessions, which should define mastery.*
+    - [x] **Automatic Curriculum Advancement** (Fixed): Dashboard now correctly advances to the next pattern upon mastery.
 
 ---
 
 ## 📋 High Priority (Phase 2 & 3 MVP Polish)
 
+- [ ] **Content Seeding Linkup**: Update `src/db/seed.ts` to use "real" content from `src/lib/content/` (Scope & Sequence, Passages) instead of placeholders in `seed-data.ts`.
 - [ ] **Placement Flow**: Implement the initial calibration/placement assessment for new users.
 - [ ] **Skills Map**: Build the interactive visual grid showing mastered vs. in-progress patterns.
 - [ ] **Growth Rate Dashboard**: Implement the rolling 4-week WCPM growth rate chart with color-coded alerts.
-- [ ] **Content Expansion**: Source and seed all Phase 2 (Skills 2.1 - 2.13) and Phase 3 (Skills 3.1 - 3.7) content.
+- [ ] **Content Expansion**: Finalize and verify all Phase 2 (Skills 2.1 - 2.13) and Phase 3 (Skills 3.1 - 3.7) content in `src/lib/content/`.
 - [ ] **Settings Menu**: Build the manual override controls for patterns and mastery calibration.
 - [ ] **Dashboard**: Recent sessions data not accurate (0 WCPM).
 - [ ] **Parent Notes History**: Create a view to read previous session notes and observations.
