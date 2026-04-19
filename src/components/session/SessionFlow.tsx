@@ -23,12 +23,18 @@ export default function SessionFlow({ plan, onSessionComplete }: { plan: any, on
     fluencyStats: null as any
   });
 
-  const handleNext = async () => {
+  const handleNext = async (updates?: Partial<typeof sessionLog>) => {
+    const currentState = { ...sessionLog, ...(updates || {}) };
+    
+    if (updates) {
+      setSessionLog(prev => ({ ...prev, ...updates }));
+    }
+
     if (currentStep < plan.activities.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
       // Final step reached, let's complete session
-      const finalLog = { ...sessionLog, completedAt: Date.now() };
+      const finalLog = { ...currentState, completedAt: Date.now() };
       onSessionComplete(finalLog);
     }
   };
@@ -47,12 +53,11 @@ export default function SessionFlow({ plan, onSessionComplete }: { plan: any, on
     return <FlashcardReview 
       words={activity.data?.words || []}
       onComplete={(stats) => {
-        setSessionLog(prev => ({ 
-           ...prev, 
-           reviewedWords: [...prev.reviewedWords, ...(activity.data?.words || [])],
-           troubleWords: [...prev.troubleWords, ...stats.incorrectWords] 
-        }));
-        handleNext();
+        const updates = {
+          reviewedWords: [...sessionLog.reviewedWords, ...(activity.data?.words || [])],
+          troubleWords: [...sessionLog.troubleWords, ...stats.incorrectWords]
+        };
+        handleNext(updates);
       }}
     />;
   }
@@ -70,8 +75,7 @@ export default function SessionFlow({ plan, onSessionComplete }: { plan: any, on
     return <PassageReader 
       passage={activity.data?.passage || { id: 'mock', title: 'The Sled', text: 'Sam had a big red sled...', wordCount: 28, maxPatternId: '2.1', patternsUsed: [] }}
       onComplete={(stats) => {
-        setSessionLog(prev => ({ ...prev, fluencyStats: stats }));
-        handleNext();
+        handleNext({ fluencyStats: stats });
       }}
     />;
   }

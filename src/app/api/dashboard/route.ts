@@ -5,21 +5,10 @@ import { desc, asc } from 'drizzle-orm';
 
 export async function GET() {
   try {
-    // 1. Get Today's Lesson (for MVP, fetch the lowest sequenceOrder pattern or one that is IN_PROGRESS)
-    // Here we'll just fetch the first pattern as standard.
     const allPatterns = await db.select().from(phonicsPatterns).orderBy(asc(phonicsPatterns.sequenceOrder));
-    const currentPattern = allPatterns[0];
-
-    // 2. Get Session History
-    const sessionHistoryReq = await db.select().from(sessions).orderBy(desc(sessions.completedAt)).limit(5);
-
-    // 3. Get Fluency Progress (WCPM)
-    const fluencyDataReq = await db.select().from(fluencyScores).orderBy(asc(fluencyScores.date)).limit(10);
     
-    // 4. Get Skills Map (Progress)
+    // 1. Get Skills Map (Progress)
     const progressReq = await db.select().from(progress);
-    
-    // Construct progress map object: { [patternId]: status }
     const skillsMap: Record<string, string> = {};
     allPatterns.forEach(p => {
       skillsMap[p.id] = 'NOT_STARTED'; // default
@@ -27,6 +16,15 @@ export async function GET() {
     progressReq.forEach(p => {
       skillsMap[p.patternId] = p.status;
     });
+
+    // 2. Get Today's Lesson (find first that is not MASTERED)
+    const currentPattern = allPatterns.find(p => skillsMap[p.id] !== 'MASTERED') || allPatterns[0];
+
+    // 3. Get Session History
+    const sessionHistoryReq = await db.select().from(sessions).orderBy(desc(sessions.completedAt)).limit(5);
+
+    // 4. Get Fluency Progress (WCPM)
+    const fluencyDataReq = await db.select().from(fluencyScores).orderBy(asc(fluencyScores.date)).limit(10);
 
     const responsePayload = {
       today: new Date().toISOString(),
