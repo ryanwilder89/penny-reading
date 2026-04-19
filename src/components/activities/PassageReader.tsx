@@ -41,8 +41,8 @@ export default function PassageReader({ passage, onComplete }: PassageReaderProp
     // Parent taps on last word read, or we assume they read everything if time isn't out.
     // For MVP simplification: We assume they read the whole passage or up to what they scored.
     // WCPM = total words - mistakes. Wait, wcpm needs to scale if they finished early.
-    const timeUsed = 60 - timeLeft;
-    const wcpm = timeUsed > 0 ? Math.round(((passage.wordCount - mistakes.size) / timeUsed) * 60) : 0;
+    const timeUsed = Math.max(1, 60 - timeLeft);
+    const wcpm = Math.round(((passage.wordCount - mistakes.size) / timeUsed) * 60);
     const accuracy = Math.round(((passage.wordCount - mistakes.size) / passage.wordCount) * 100);
     const mistakenWords = Array.from(mistakes).map((idx) => words[idx]);
     

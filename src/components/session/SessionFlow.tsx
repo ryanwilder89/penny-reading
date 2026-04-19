@@ -8,7 +8,7 @@ import WordChain from '../activities/WordChain';
 import PassageReader from '../activities/PassageReader';
 import { Passage } from '@/lib/content/passages';
 
-export default function SessionFlow({ plan, onSessionComplete }: { plan: any, onSessionComplete: () => void }) {
+export default function SessionFlow({ plan, onSessionComplete }: { plan: any, onSessionComplete: (log: any) => void }) {
   const [currentStep, setCurrentStep] = useState(0);
   const router = useRouter();
 
@@ -29,18 +29,7 @@ export default function SessionFlow({ plan, onSessionComplete }: { plan: any, on
     } else {
       // Final step reached, let's complete session
       const finalLog = { ...sessionLog, completedAt: Date.now() };
-      
-      try {
-        await fetch('/api/progress/session-complete', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(finalLog)
-        });
-      } catch (error) {
-        console.error("Failed to save session:", error);
-      }
-      
-      onSessionComplete();
+      onSessionComplete(finalLog);
     }
   };
 

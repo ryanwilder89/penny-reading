@@ -10,6 +10,7 @@ function SessionPageContent() {
   const searchParams = useSearchParams();
   const patternId = searchParams.get('patternId');
   const [completed, setCompleted] = useState(false);
+  const [sessionLog, setSessionLog] = useState<any>(null);
   const [plan, setPlan] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -51,10 +52,10 @@ function SessionPageContent() {
       {!completed ? (
         <SessionFlow 
           plan={plan} 
-          onSessionComplete={() => setCompleted(true)} 
+          onSessionComplete={(log) => { setSessionLog(log); setCompleted(true); }} 
         />
       ) : (
-        <SessionComplete />
+        <SessionComplete sessionLog={sessionLog} />
       )}
     </main>
   );

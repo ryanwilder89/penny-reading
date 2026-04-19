@@ -40,6 +40,7 @@ export async function saveSessionResults(payload: any) {
     startedAt: new Date(payload.startedAt),
     completedAt: new Date(payload.completedAt || Date.now()),
     parentId: 'default',
+    parentNotes: payload.parentNotes || '',
   }).onConflictDoNothing();
 
   // 2. Queue trouble words & advance correctly reviewed words
@@ -102,7 +103,7 @@ export async function saveSessionResults(payload: any) {
   }
 
   // 3. Save fluency score if present
-  if (payload.fluencyStats && payload.fluencyStats.wpm > 0) {
+  if (payload.fluencyStats && payload.fluencyStats.wpm !== undefined && payload.fluencyStats.wpm >= 0) {
     await db.insert(fluencyScores).values({
       id: `fs_${Date.now()}`,
       date: sessionDate,

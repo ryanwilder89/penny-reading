@@ -1,15 +1,31 @@
 "use client";
 import React, { useState } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import CelebrationAnim from '../ui/CelebrationAnim';
 
-export default function SessionComplete({ stats }: { stats?: any }) {
+export default function SessionComplete({ sessionLog }: { sessionLog?: any }) {
   const [notes, setNotes] = useState('');
   const [saved, setSaved] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const router = useRouter();
 
-  const handleSave = () => {
-    setSaved(true);
-    // Real implementation would sync notes to db
+  const handleFinish = async () => {
+    if (isSaving || saved) return;
+    setIsSaving(true);
+    
+    try {
+      const payload = { ...sessionLog, parentNotes: notes };
+      await fetch('/api/progress/session-complete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      setSaved(true);
+      router.push('/');
+    } catch (error) {
+      console.error("Failed to save session:", error);
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -32,17 +48,22 @@ export default function SessionComplete({ stats }: { stats?: any }) {
               <p className="text-green-600 font-bold mt-3">Notes saved!</p>
            ) : (
              <button 
-               onClick={handleSave}
-               className="mt-4 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg transition-colors"
+               onClick={handleFinish}
+               disabled={isSaving}
+               className="mt-4 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg transition-colors disabled:opacity-50"
              >
-               Save Notes
+               {isSaving ? 'Saving...' : 'Save Notes'}
              </button>
            )}
         </div>
 
-        <Link href="/" className="mt-6 bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-12 rounded-full shadow-lg text-xl transition-transform transform hover:scale-105 active:scale-95 text-center w-full md:w-auto">
-          Return to Dashboard
-        </Link>
+        <button 
+          onClick={handleFinish}
+          disabled={isSaving}
+          className="mt-6 bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-12 rounded-full shadow-lg text-xl transition-transform transform hover:scale-105 active:scale-95 text-center w-full md:w-auto disabled:opacity-50"
+        >
+          {isSaving ? 'Saving...' : 'Return to Dashboard'}
+        </button>
       </div>
     </div>
   );
