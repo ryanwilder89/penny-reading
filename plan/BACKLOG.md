@@ -28,7 +28,11 @@ This document tracks the features, bugs, and upcoming phases for the Penny's Rea
 - [ ] **Settings Menu**: Build the manual override controls for patterns and mastery calibration.
 - [ ] **Dashboard**: Recent sessions data not accurate (0 WCPM).
 - [ ] **Parent Notes History**: Create a view to read previous session notes and observations.
-- [ ] **Multi-Parent Sync**: Verify seamless experience when switching between parent accounts/devices. Support via login credentials..
+- [ ] **Authentication & Security**:
+    - [ ] Implement secure login screen and flow.
+    - [ ] Securely store and manage user credentials.
+    - [ ] Enable Google Account OAuth integration.
+    - [ ] Single account management: One set of credentials per child (removed multi-parent support for shared progress).
 ---
 
 ## 🛠️ Known Issues & Bugs
