@@ -51,4 +51,4 @@ This document tracks the features, bugs, and upcoming phases for the Penny's Rea
 - [ ] **Nonsense Word Practice**: Generate pseudo-words to isolate decoding skills.
 - [ ] **Spelling Dictation Mode**: Extension of Word Building for active spelling practice.
 - [ ] **Echo Reading Mode**: Support for sentence-level highlighting.
-
+- [x] **Edit/Delete Parent Notes**: Allow parents to modify or delete historical session notes.

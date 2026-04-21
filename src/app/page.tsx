@@ -112,6 +112,9 @@ export default function Home() {
                   <button className="flex-1 bg-blue-100 hover:bg-blue-200 text-blue-800 font-semibold py-3 rounded-lg shadow-sm border border-blue-200 transition-colors">Fluency Check</button>
                   <button className="flex-1 bg-purple-100 hover:bg-purple-200 text-purple-800 font-semibold py-3 rounded-lg shadow-sm border border-purple-200 transition-colors">Free Practice</button>
                 </div>
+                <Link href="/notes" className="w-full mt-2 bg-yellow-100 hover:bg-yellow-200 text-yellow-800 text-center font-semibold py-3 rounded-lg shadow-sm border border-yellow-200 transition-colors">
+                  View Parent Notes History
+                </Link>
              </div>
            </div>
          </div>

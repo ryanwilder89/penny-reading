@@ -1,6 +1,6 @@
 import { db } from './index';
 import { words, decodablePassages, sessions, progress, reviewWords, fluencyScores } from './schema';
-import { desc, eq, lte } from 'drizzle-orm';
+import { desc, eq, lte, isNotNull, ne, and } from 'drizzle-orm';
 
 // Basic CRUD Operations to expose Database to the application layer
 
@@ -115,6 +115,36 @@ export async function saveSessionResults(payload: any) {
       accuracyPct: payload.fluencyStats.accuracy,
       timeSeconds: 60,
     });
-  }
+}
 }
 
+export async function getParentNotesHistory() {
+  return db.select({
+    id: sessions.id,
+    date: sessions.date,
+    completedAt: sessions.completedAt,
+    lessonId: sessions.lessonId,
+    parentNotes: sessions.parentNotes
+  })
+  .from(sessions)
+  .where(
+    and(
+      isNotNull(sessions.parentNotes),
+      ne(sessions.parentNotes, '')
+    )
+  )
+  .orderBy(desc(sessions.completedAt))
+  .all();
+}
+
+export async function updateParentNote(id: string, newNote: string) {
+  return db.update(sessions)
+    .set({ parentNotes: newNote })
+    .where(eq(sessions.id, id));
+}
+
+export async function deleteParentNote(id: string) {
+  return db.update(sessions)
+    .set({ parentNotes: '' })
+    .where(eq(sessions.id, id));
+}
