@@ -45,7 +45,7 @@ export default function SessionFlow({ plan, onSessionComplete }: { plan: any, on
   if (activity.type === 'WARMUP') {
     return <PhonemicWarmup 
       prompts={activity.data?.prompts || []}
-      onComplete={handleNext}
+      onComplete={(accuracy) => handleNext()}
     />;
   }
 
