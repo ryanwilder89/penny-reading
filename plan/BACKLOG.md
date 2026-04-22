@@ -20,6 +20,7 @@ This document tracks the features, bugs, and upcoming phases for the Penny's Rea
 - [x] **Parent Notes History**: View previous session notes and observations.
 - [x] **Authentication Foundation**: Secure login screen, flow, and credential management.
 - [x] **Google OAuth Cleanup**: Removed Google OAuth UI and configuration.
+- [x] **Security Enhancements**: Implemented 14-character minimum password length and password confirmation.
 
 
 ---
@@ -35,8 +36,8 @@ This document tracks the features, bugs, and upcoming phases for the Penny's Rea
 - [ ] **Settings Menu**: Build the manual override controls for patterns and mastery calibration.
 
 - [ ] **Authentication & Security**:
-    - [ ] Require entering password twice and confirming they match during sign up.
-    - [ ] Have minimum password requirements (length, complexity).
+    - [ ] Require entering password twice and confirming they match during sign up. (DONE)
+    - [ ] Have minimum password requirements (length, complexity). (DONE)
 ---
 
 ## 🛠️ Known Issues & Bugs
