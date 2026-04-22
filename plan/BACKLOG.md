@@ -15,6 +15,7 @@ This document tracks the features, bugs, and upcoming phases for the Penny's Rea
     - [x] Spaced Repetition (SM-2 Lite) for flashcards.
     - [x] Mastery Evaluation (Accuracy/WCPM thresholds).
     - [x] **Automatic Curriculum Advancement** (Fixed): Dashboard now correctly advances to the next pattern upon mastery.
+- [x] **Dashboard Load Fix**: Resolved the crash/loading error for new users with no history.
 
 ---
 
@@ -44,7 +45,6 @@ This document tracks the features, bugs, and upcoming phases for the Penny's Rea
 
 - [x] **Bug (Fixed)**: Word Chain `availableLetters` generation logic was missing required characters.
 - [x] **Bug (Fixed)**: `PassageReader` was attempting to read `.text` instead of `.content`.
-- [ ] **Bug**: Dashboard error after new account creation and `npm run db:reset`. New users should be greeted with a clean slate (calibration/placement flow) rather than a loading error or data-not-found crash.
 - [ ] **UX Polish**: Improve transition animations between session activities.
 - [ ] **UX Polish**: Add a loading state spinner to the "Return to Dashboard" button.
 - [ ] **UX Polish**: Green checkmark after completing a session should fade to avoid conflicting with notes field.
