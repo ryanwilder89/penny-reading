@@ -34,7 +34,7 @@ This document tracks the features, bugs, and upcoming phases for the Penny's Rea
 - [ ] **Placement Flow**: Implement the initial calibration/placement assessment for new users.
 - [ ] **Skills Map**: Build the interactive visual grid showing mastered vs. in-progress patterns.
 - [ ] **Growth Rate Dashboard**: Implement the rolling 4-week WCPM growth rate chart with color-coded alerts.
-- [ ] **Content Expansion**: Finalize and verify all Phase 2 (Skills 2.1 - 2.13) and Phase 3 (Skills 3.1 - 3.7) content in `src/lib/content/`.
+- [x] **Content Expansion**: Finalize and verify all Phase 2 (Skills 2.1 - 2.13) and Phase 3 (Skills 3.1 - 3.7) content in `src/lib/content/`.
 - [ ] **Content Sourcing**: Research and integrate additional word lists and decodable passages from online sources.
 
 ---
