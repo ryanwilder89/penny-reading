@@ -17,6 +17,9 @@ This document tracks the features, bugs, and upcoming phases for the Penny's Rea
     - [x] **Automatic Curriculum Advancement** (Fixed): Dashboard now correctly advances to the next pattern upon mastery.
 - [x] **Dashboard Load Fix**: Resolved the crash/loading error for new users with no history.
 - [x] **Recent Sessions Fix**: Fixed accurate WCPM reporting for recent sessions on dashboard.
+- [x] **Parent Notes History**: View previous session notes and observations.
+- [x] **Authentication Foundation**: Secure login screen, flow, and credential management.
+
 
 ---
 
@@ -29,16 +32,11 @@ This document tracks the features, bugs, and upcoming phases for the Penny's Rea
 - [ ] **Content Expansion**: Finalize and verify all Phase 2 (Skills 2.1 - 2.13) and Phase 3 (Skills 3.1 - 3.7) content in `src/lib/content/`.
 - [ ] **Content Sourcing**: Research and integrate additional word lists and decodable passages from online sources.
 - [ ] **Settings Menu**: Build the manual override controls for patterns and mastery calibration.
-- [ ] **Parent Notes History**: Create a view to read previous session notes and observations.
+
 - [ ] **Authentication & Security**:
-    - [ ] Implement secure login screen and flow.
-    - [ ] Securely store and manage user credentials.
     - [ ] Require entering password twice and confirming they match during sign up.
     - [ ] Have minimum password requirements (length, complexity).
-    - [ ] **Google OAuth (Broken)**: Clicking Google sign-in stays on the login screen instead of redirecting.
-    - [ ] **Google OAuth UX**: Ensure Google sign-in is available on the Sign-up screen (currently only on Login).
-    - [ ] Enable Google Account OAuth integration.
-    - [ ] Single account management: One set of credentials per child (removed multi-parent support for shared progress).
+    - [ ] **Remove Google OAuth UI**: Clean up auth screens as OAuth is no longer in scope.
 ---
 
 ## 🛠️ Known Issues & Bugs
