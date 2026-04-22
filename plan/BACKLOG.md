@@ -19,6 +19,7 @@ This document tracks the features, bugs, and upcoming phases for the Penny's Rea
 - [x] **Recent Sessions Fix**: Fixed accurate WCPM reporting for recent sessions on dashboard.
 - [x] **Parent Notes History**: View previous session notes and observations.
 - [x] **Authentication Foundation**: Secure login screen, flow, and credential management.
+- [x] **Google OAuth Cleanup**: Removed Google OAuth UI and configuration.
 
 
 ---
@@ -36,7 +37,6 @@ This document tracks the features, bugs, and upcoming phases for the Penny's Rea
 - [ ] **Authentication & Security**:
     - [ ] Require entering password twice and confirming they match during sign up.
     - [ ] Have minimum password requirements (length, complexity).
-    - [ ] **Remove Google OAuth UI**: Clean up auth screens as OAuth is no longer in scope.
 ---
 
 ## 🛠️ Known Issues & Bugs

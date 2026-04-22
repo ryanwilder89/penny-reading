@@ -1,6 +1,5 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import GoogleProvider from "next-auth/providers/google";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -14,10 +13,6 @@ export const authOptions: NextAuthOptions = {
     signIn: "/auth/signin",
   },
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-    }),
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -53,23 +48,6 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user, account, profile }) {
       if (user) {
         token.id = user.id;
-        
-        // Handle OAuth Sign In: Auto-create user if not exists
-        if (account?.provider === "google") {
-           const existingUser = await db.select().from(users).where(eq(users.email, user.email!)).get();
-           if (!existingUser) {
-             const newId = `usr_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
-             await db.insert(users).values({
-               id: newId,
-               email: user.email!,
-               name: user.name || "",
-               image: user.image || "",
-             });
-             token.id = newId;
-           } else {
-             token.id = existingUser.id;
-           }
-        }
       }
       return token;
     },
