@@ -3,11 +3,11 @@ import { phonicsPatterns, words, decodablePassages, progress } from '@/db/schema
 import { asc, eq } from 'drizzle-orm';
 import { getDueReviewWords } from '@/db/queries';
 
-export async function getTodayLesson(progressData?: any) {
+export async function getTodayLesson(userId: string) {
   // Query all patterns in order
   const allPatterns = await db.select().from(phonicsPatterns).orderBy(asc(phonicsPatterns.sequenceOrder));
-  // Query all progress
-  const allProgress = await db.select().from(progress).all();
+  // Query all progress for user
+  const allProgress = await db.select().from(progress).where(eq(progress.userId, userId)).all();
   
   // Find the first pattern that is NOT mastered
   for (const pattern of allPatterns) {
@@ -21,13 +21,13 @@ export async function getTodayLesson(progressData?: any) {
   return allPatterns[allPatterns.length - 1];
 }
 
-export async function generateSessionPlan(patternId?: string) {
+export async function generateSessionPlan(userId: string, patternId?: string) {
   let currentPattern;
   if (patternId) {
     const dbPattern = await db.select().from(phonicsPatterns).where(eq(phonicsPatterns.id, patternId)).limit(1);
     currentPattern = dbPattern[0];
   } else {
-    currentPattern = await getTodayLesson();
+    currentPattern = await getTodayLesson(userId);
   }
 
   if (!currentPattern) {
@@ -35,7 +35,7 @@ export async function generateSessionPlan(patternId?: string) {
   }
 
   const allWords = await db.select().from(words).limit(20);
-  const reviewWordsReq = await getDueReviewWords();
+  const reviewWordsReq = await getDueReviewWords(userId);
 
   const patternPassages = await db.select().from(decodablePassages).where(eq(decodablePassages.maxPatternId, currentPattern.id));
   const targetPassage = patternPassages.length > 0 ? patternPassages[0] : (await db.select().from(decodablePassages).limit(1))[0];

@@ -1,14 +1,22 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/db/index';
-import { phonicsPatterns, sessions, fluencyScores, progress } from '@/db/schema';
-import { desc, asc } from 'drizzle-orm';
+import { phonicsPatterns, progress, readingSessions, fluencyScores } from '@/db/schema';
+import { desc, asc, eq } from 'drizzle-orm';
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 
 export async function GET() {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    const userId = session.user.id;
+
     const allPatterns = await db.select().from(phonicsPatterns).orderBy(asc(phonicsPatterns.sequenceOrder));
     
     // 1. Get Skills Map (Progress)
-    const progressReq = await db.select().from(progress);
+    const progressReq = await db.select().from(progress).where(eq(progress.userId, userId));
     const skillsMap: Record<string, string> = {};
     allPatterns.forEach(p => {
       skillsMap[p.id] = 'NOT_STARTED'; // default
@@ -21,10 +29,16 @@ export async function GET() {
     const currentPattern = allPatterns.find(p => skillsMap[p.id] !== 'MASTERED') || allPatterns[0];
 
     // 3. Get Session History
-    const sessionHistoryReq = await db.select().from(sessions).orderBy(desc(sessions.completedAt)).limit(5);
+    const sessionHistoryReq = await db.select().from(readingSessions)
+      .where(eq(readingSessions.userId, userId))
+      .orderBy(desc(readingSessions.completedAt))
+      .limit(5);
 
     // 4. Get Fluency Progress (WCPM)
-    const fluencyDataReq = await db.select().from(fluencyScores).orderBy(asc(fluencyScores.date)).limit(10);
+    const fluencyDataReq = await db.select().from(fluencyScores)
+      .where(eq(fluencyScores.userId, userId))
+      .orderBy(asc(fluencyScores.date))
+      .limit(10);
 
     const responsePayload = {
       today: new Date().toISOString(),

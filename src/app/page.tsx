@@ -3,61 +3,75 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useSession, signOut } from "next-auth/react";
 import WcpmChart from '@/components/progress/WcpmChart';
 import SessionHistory from '@/components/progress/SessionHistory';
 import GrowthRate from '@/components/progress/GrowthRate';
 import SkillsMap from '@/components/progress/SkillsMap';
+
 export default function Home() {
   const router = useRouter();
-  const [currentUser, setCurrentUser] = useState<string | null>(null);
+  const { data: session, status } = useSession();
   const [dashboardData, setDashboardData] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (currentUser === 'existing') {
-      setLoading(true);
+    if (status === 'authenticated') {
       fetch('/api/dashboard')
-        .then(res => res.json())
-        .then(data => {
-          setDashboardData(data);
-          setLoading(false);
+        .then(res => {
+          if (!res.ok) throw new Error('Failed to load dashboard');
+          return res.json();
         })
+        .then(data => setDashboardData(data))
         .catch(err => {
           console.error('Error loading dashboard data', err);
-          setLoading(false);
+          setError(err.message);
         });
     }
-  }, [currentUser]);
+  }, [status]);
 
-  // Quick simulated login/user selection for testing
-  if (!currentUser) {
+  if (status === 'loading') {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-gray-50">
+        <div className="text-xl font-semibold text-gray-500 animate-pulse">Loading...</div>
+      </main>
+    );
+  }
+
+  if (status === 'unauthenticated') {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center p-4 md:p-8 bg-gray-50">
         <div className="w-full max-w-md bg-white text-black p-8 rounded-xl shadow-xl flex flex-col gap-6 text-center">
-          <h1 className="text-3xl font-bold mb-4">Welcome</h1>
-          <p className="text-gray-600 mb-6 font-semibold">Select an option to test Phase 1 flows:</p>
+          <h1 className="text-3xl font-bold mb-2">Penny's Reading</h1>
+          <p className="text-gray-600 mb-6 font-semibold">Sign in to track your child's progress.</p>
           
-          <button 
-            onClick={() => router.push('/placement')}
+          <Link 
+            href="/auth/signin"
             className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-6 rounded-lg shadow-sm transition-colors text-lg"
           >
-            Log in as New User
-            <div className="text-sm font-normal text-blue-100 mt-1">(Triggers Placement/Calibration)</div>
-          </button>
+            Sign In
+          </Link>
 
-          <button 
-            onClick={() => setCurrentUser('existing')}
-            className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 rounded-lg shadow-sm transition-colors text-lg"
+          <Link 
+            href="/auth/signup"
+            className="w-full bg-white border-2 border-gray-200 hover:bg-gray-50 text-gray-800 font-bold py-4 px-6 rounded-lg shadow-sm transition-colors text-lg"
           >
-            Log in as Existing User
-            <div className="text-sm font-normal text-green-100 mt-1">(Shows Daily Dashboard)</div>
-          </button>
+            Create an Account
+          </Link>
         </div>
       </main>
     );
   }
 
-  if (currentUser === 'existing' && (loading || !dashboardData)) {
+  if (error) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-gray-50">
+        <div className="text-xl font-semibold text-red-500">Error: {error}</div>
+      </main>
+    );
+  }
+
+  if (!dashboardData) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-gray-50">
         <div className="text-xl font-semibold text-gray-500 animate-pulse">Loading dashboard...</div>
@@ -67,13 +81,21 @@ export default function Home() {
 
   const { today, streak, currentLesson, fluencyProgress, sessionHistory, skillsMap } = dashboardData;
 
-  // Format today's date
   const dateObj = new Date(today);
   const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 
-  // Original Daily Dashboard UI (Shown to Existing Users)
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-4 md:p-8">
+    <main className="flex min-h-screen flex-col items-center p-4 md:p-8 bg-gray-50">
+      <div className="w-full max-w-4xl flex justify-between items-center mb-6">
+        <h1 className="text-xl font-bold text-gray-800">Hi, {session?.user?.name || session?.user?.email?.split('@')[0]}</h1>
+        <button 
+          onClick={() => signOut()}
+          className="text-sm font-semibold text-gray-500 hover:text-gray-800 transition-colors"
+        >
+          Sign Out
+        </button>
+      </div>
+
       <div className="w-full max-w-4xl bg-white text-black p-6 md:p-8 rounded-xl shadow-xl flex flex-col gap-6">
         <div className="flex justify-between items-center border-b pb-4">
           <h2 className="text-2xl font-semibold">Today: {formattedDate}</h2>
