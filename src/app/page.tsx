@@ -19,7 +19,13 @@ export default function Home() {
     if (status === 'authenticated') {
       fetch('/api/dashboard')
         .then(res => {
-          if (!res.ok) throw new Error('Failed to load dashboard');
+          if (!res.ok) {
+            return res.json().then(errData => {
+              throw new Error(errData.error || `HTTP ${res.status}`);
+            }).catch(() => {
+              throw new Error(`Failed to load dashboard (HTTP ${res.status})`);
+            });
+          }
           return res.json();
         })
         .then(data => setDashboardData(data))
