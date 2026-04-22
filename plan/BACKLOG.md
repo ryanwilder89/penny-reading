@@ -32,6 +32,8 @@ This document tracks the features, bugs, and upcoming phases for the Penny's Rea
 - [ ] **Authentication & Security**:
     - [ ] Implement secure login screen and flow.
     - [ ] Securely store and manage user credentials.
+    - [ ] Require entering password twice and confirming they match during sign up.
+    - [ ] Have minimum password requirements (length, complexity).
     - [ ] **Google OAuth UX**: Ensure Google sign-in is available immediately on both Login and Sign-up screens for new users.
     - [ ] Enable Google Account OAuth integration.
     - [ ] Single account management: One set of credentials per child (removed multi-parent support for shared progress).

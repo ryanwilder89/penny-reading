@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 
 export default function SignUp() {
@@ -27,7 +28,17 @@ export default function SignUp() {
       if (!res.ok) {
         setError(data.error || "Registration failed");
       } else {
-        router.push("/auth/signin");
+        const signinRes = await signIn("credentials", {
+          email,
+          password,
+          redirect: false,
+        });
+
+        if (signinRes?.error) {
+          setError("Account created, but failed to automatically log in.");
+        } else {
+          router.push("/");
+        }
       }
     } catch (err) {
       setError("An unexpected error occurred");
