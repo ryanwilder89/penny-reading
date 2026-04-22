@@ -21,6 +21,9 @@ This document tracks the features, bugs, and upcoming phases for the Penny's Rea
 - [x] **Authentication Foundation**: Secure login screen, flow, and credential management.
 - [x] **Google OAuth Cleanup**: Removed Google OAuth UI and configuration.
 - [x] **Security Enhancements**: Implemented 14-character minimum password length and password confirmation.
+- [x] **Authentication & Security**:
+    - [x] Require entering password twice and confirming they match during sign up.
+    - [x] Have minimum password requirements (length, complexity).
 
 
 ---
@@ -35,9 +38,6 @@ This document tracks the features, bugs, and upcoming phases for the Penny's Rea
 - [ ] **Content Sourcing**: Research and integrate additional word lists and decodable passages from online sources.
 - [ ] **Settings Menu**: Build the manual override controls for patterns and mastery calibration.
 
-- [ ] **Authentication & Security**:
-    - [ ] Require entering password twice and confirming they match during sign up. (DONE)
-    - [ ] Have minimum password requirements (length, complexity). (DONE)
 ---
 
 ## 🛠️ Known Issues & Bugs
