@@ -35,10 +35,12 @@ export async function GET() {
       .limit(5);
 
     // 4. Get Fluency Progress (WCPM)
-    const fluencyDataReq = await db.select().from(fluencyScores)
+    const fluencyDataReqDesc = await db.select().from(fluencyScores)
       .where(eq(fluencyScores.userId, userId))
-      .orderBy(asc(fluencyScores.date))
-      .limit(10);
+      .orderBy(desc(fluencyScores.date))
+      .limit(30);
+      
+    const fluencyDataReq = [...fluencyDataReqDesc].reverse();
 
     const responsePayload = {
       today: new Date().toISOString(),
@@ -55,12 +57,15 @@ export async function GET() {
         { date: '2026-04-12', wcpm: 28 },
         { date: '2026-04-14', wcpm: 30 }
       ], // Fallback data
-      sessionHistory: sessionHistoryReq.map(s => ({
-        date: s.completedAt?.toISOString() || s.date,
-        lessonId: s.lessonId,
-        durationMin: s.startedAt && s.completedAt ? Math.round((s.completedAt.getTime() - s.startedAt.getTime()) / 60000) : 12,
-        wcpm: 0 // Mock, actual wcpm is in fluencyScores
-      })),
+      sessionHistory: sessionHistoryReq.map(s => {
+        const match = fluencyDataReqDesc.find(f => f.date === s.date);
+        return {
+          date: s.completedAt?.toISOString() || s.date,
+          lessonId: s.lessonId,
+          durationMin: s.startedAt && s.completedAt ? Math.round((s.completedAt.getTime() - s.startedAt.getTime()) / 60000) : 12,
+          wcpm: match ? match.wcpm : 0
+        };
+      }),
       skillsMap
     };
 

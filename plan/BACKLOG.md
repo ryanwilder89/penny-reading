@@ -16,6 +16,7 @@ This document tracks the features, bugs, and upcoming phases for the Penny's Rea
     - [x] Mastery Evaluation (Accuracy/WCPM thresholds).
     - [x] **Automatic Curriculum Advancement** (Fixed): Dashboard now correctly advances to the next pattern upon mastery.
 - [x] **Dashboard Load Fix**: Resolved the crash/loading error for new users with no history.
+- [x] **Recent Sessions Fix**: Fixed accurate WCPM reporting for recent sessions on dashboard.
 
 ---
 
@@ -28,7 +29,6 @@ This document tracks the features, bugs, and upcoming phases for the Penny's Rea
 - [ ] **Content Expansion**: Finalize and verify all Phase 2 (Skills 2.1 - 2.13) and Phase 3 (Skills 3.1 - 3.7) content in `src/lib/content/`.
 - [ ] **Content Sourcing**: Research and integrate additional word lists and decodable passages from online sources.
 - [ ] **Settings Menu**: Build the manual override controls for patterns and mastery calibration.
-- [ ] **Dashboard**: Recent sessions data not accurate (0 WCPM).
 - [ ] **Parent Notes History**: Create a view to read previous session notes and observations.
 - [ ] **Authentication & Security**:
     - [ ] Implement secure login screen and flow.
