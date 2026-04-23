@@ -1,7 +1,8 @@
 import { db } from '@/db/index';
-import { phonicsPatterns, words, decodablePassages, progress } from '@/db/schema';
+import { phonicsPatterns, words, decodablePassages, progress, wordChains } from '@/db/schema';
 import { asc, eq } from 'drizzle-orm';
 import { getDueReviewWords } from '@/db/queries';
+import { scopeAndSequence } from '@/lib/content';
 
 export async function getTodayLesson(userId: string) {
   // Query all patterns in order
@@ -34,11 +35,32 @@ export async function generateSessionPlan(userId: string, patternId?: string) {
     throw new Error('No phonics patterns found in database.');
   }
 
-  const allWords = await db.select().from(words).limit(20);
+  // Targeted Word Selection
+  const patternContent = scopeAndSequence.find(p => p.id === currentPattern.id);
+  const targetWords = patternContent ? patternContent.words : ['clap', 'flop'];
+
   const reviewWordsReq = await getDueReviewWords(userId);
 
   const patternPassages = await db.select().from(decodablePassages).where(eq(decodablePassages.maxPatternId, currentPattern.id));
   const targetPassage = patternPassages.length > 0 ? patternPassages[0] : (await db.select().from(decodablePassages).limit(1))[0];
+
+  // Dynamic Chains
+  const patternChains = await db.select().from(wordChains).where(eq(wordChains.patternId, currentPattern.id));
+  const targetChain = patternChains.length > 0 ? patternChains[0] : null;
+
+  let initialWord = "flat";
+  let targetWord = "flop";
+  let availableLetters = Array.from(new Set([...targetWord.split(''), 'o', 'i', 's', 'p', 'm', 'a']));
+
+  if (targetChain && targetChain.words.length > 1) {
+    initialWord = targetChain.words[0];
+    targetWord = targetChain.words[1];
+    availableLetters = Array.from(new Set([...targetWord.split(''), 'a', 'e', 'i', 'o', 'u', 's', 'p', 'm', 't', 'c', 'l', 'r', 'b', 'd', 'n', 'g', 'h']));
+  } else if (targetWords.length > 1) {
+    initialWord = targetWords[0];
+    targetWord = targetWords[1];
+    availableLetters = Array.from(new Set([...targetWord.split(''), 'a', 'e', 'i', 'o', 'u', 's', 'p', 'm', 't', 'c', 'l', 'r', 'b', 'd', 'n', 'g', 'h']));
+  }
 
   return {
     lesson: currentPattern,
@@ -57,16 +79,16 @@ export async function generateSessionPlan(userId: string, patternId?: string) {
         type: 'REVIEW', 
         id: 'review-1', 
         data: { 
-          words: reviewWordsReq.length > 0 ? reviewWordsReq.map(w => w.word).slice(0, 5) : ['clap', 'sled', 'drum', 'frog', 'jump']
+          words: reviewWordsReq.length > 0 ? reviewWordsReq.map(w => w.word).slice(0, 5) : targetWords.slice(0, 5)
         } 
       },
       { 
         type: 'PRACTICE', 
         id: 'practice-1',
         data: {
-          initialWord: allWords[0]?.text || "flat",
-          targetWord: allWords[1]?.text || "flop",
-          availableLetters: Array.from(new Set([...(allWords[1]?.text || "flop").split(''), 'o', 'i', 's', 'p', 'm', 'a']))
+          initialWord,
+          targetWord,
+          availableLetters
         }
       },
       { 

@@ -30,7 +30,7 @@ This document tracks the features, bugs, and upcoming phases for the Penny's Rea
 
 ## 📋 High Priority (Phase 2 & 3 MVP Polish)
 
-- [ ] **Content Seeding Linkup**: Update `src/db/seed.ts` to use "real" content from `src/lib/content/` (Scope & Sequence, Passages) instead of placeholders in `seed-data.ts`.
+- [x] **Content Seeding Linkup**: Update `src/db/seed.ts` to use "real" content from `src/lib/content/` (Scope & Sequence, Passages) instead of placeholders in `seed-data.ts`.
 - [ ] **Placement Flow**: Implement the initial calibration/placement assessment for new users.
 - [ ] **Skills Map**: Build the interactive visual grid showing mastered vs. in-progress patterns.
 - [ ] **Growth Rate Dashboard**: Implement the rolling 4-week WCPM growth rate chart with color-coded alerts.
