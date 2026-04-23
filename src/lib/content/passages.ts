@@ -9,6 +9,22 @@ export interface Passage {
 }
 
 export const PASSAGES: Record<string, Passage> = {
+  "passage-1.1": {
+    id: "passage-1.1",
+    title: "The Cat on the Map",
+    text: "The cat sat on the map. The map is by the bat.",
+    wordCount: 12,
+    maxPatternId: "1.1",
+    patternsUsed: ["1.1"]
+  },
+  "passage-1.3": {
+    id: "passage-1.3",
+    title: "The Pig in the Pot",
+    text: "A pig sat in a pot. The dog ran to the log.",
+    wordCount: 12,
+    maxPatternId: "1.3",
+    patternsUsed: ["1.1", "1.2", "1.3"]
+  },
   "passage-1": {
     id: "passage-1",
     title: "The Sled",

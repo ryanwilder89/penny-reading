@@ -1,5 +1,29 @@
 export const scopeAndSequence = [
   {
+    id: "patt_cvc_a",
+    phase: 2,
+    order: 1.1,
+    name: "Short a (CVC)",
+    script: "Say each sound slowly: /c/ /a/ /t/. Then say it fast: cat.",
+    words: ["cat", "map", "bat", "zat", "mat", "cap", "tap", "hat", "rat", "pan", "fan", "man", "van", "jam", "yam"]
+  },
+  {
+    id: "patt_cvc_i",
+    phase: 2,
+    order: 1.2,
+    name: "Short i (CVC)",
+    script: "Say each sound slowly: /s/ /i/ /t/. Then say it fast: sit.",
+    words: ["sit", "pig", "rip", "vip", "hit", "bit", "fit", "lip", "tip", "sip", "dig", "fig", "wig", "bin", "fin"]
+  },
+  {
+    id: "patt_cvc_o",
+    phase: 2,
+    order: 1.3,
+    name: "Short o (CVC)",
+    script: "Say each sound slowly: /p/ /o/ /t/. Then say it fast: pot.",
+    words: ["pot", "dog", "log", "nop", "hot", "dot", "got", "hop", "mop", "top", "bog", "fog", "hog", "jog", "cot"]
+  },
+  {
     id: "blend-initial-l",
     phase: 2,
     order: 2.1,

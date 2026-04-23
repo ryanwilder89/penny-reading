@@ -5,8 +5,23 @@ import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 export default function GrowthRate({
   growthData
 }: {
-  growthData: GrowthResult
+  growthData: GrowthResult | null
 }) {
+  if (!growthData) {
+    return (
+      <div className="p-6 rounded-xl border shadow-sm flex items-center justify-between bg-gray-50 text-gray-500 w-full">
+        <div>
+           <h4 className="text-lg font-bold mb-1 text-gray-700">4-Week Growth Rate</h4>
+           <p className="text-xl font-semibold mt-2">Insufficient Data</p>
+           <p className="text-sm mt-1">Complete at least 2 reading sessions to calculate your growth rate.</p>
+        </div>
+        <div className="bg-white p-4 rounded-full shadow-sm ml-4 shrink-0">
+           <Minus className="w-8 h-8 md:w-10 md:h-10 text-gray-400" />
+        </div>
+      </div>
+    );
+  }
+
   let bgColor = 'bg-gray-100';
   let textColor = 'text-gray-800';
   let icon = <Minus className="w-8 h-8 md:w-10 md:h-10 text-gray-500" />;

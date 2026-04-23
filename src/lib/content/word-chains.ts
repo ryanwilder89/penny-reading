@@ -6,6 +6,24 @@ export interface WordChain {
 }
 
 export const WORD_CHAINS: Record<string, WordChain> = {
+  "chain-1.1": {
+    id: "chain-1.1",
+    patternId: "1.1",
+    words: ["cat", "bat", "mat", "map", "cap", "tap"],
+    changePositions: [0, 0, 2, 0, 0]
+  },
+  "chain-1.2": {
+    id: "chain-1.2",
+    patternId: "1.2",
+    words: ["sit", "hit", "bit", "bin", "fin", "fig"],
+    changePositions: [0, 0, 2, 0, 2]
+  },
+  "chain-1.3": {
+    id: "chain-1.3",
+    patternId: "1.3",
+    words: ["pot", "hot", "hop", "mop", "top"],
+    changePositions: [0, 2, 0, 0]
+  },
   "chain-2.1": {
     id: "chain-2.1",
     patternId: "2.1",

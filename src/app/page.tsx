@@ -8,6 +8,7 @@ import WcpmChart from '@/components/progress/WcpmChart';
 import SessionHistory from '@/components/progress/SessionHistory';
 import GrowthRate from '@/components/progress/GrowthRate';
 import SkillsMap from '@/components/progress/SkillsMap';
+import { calculateGrowthRate } from '@/lib/engine/growth-calculator';
 
 export default function Home() {
   const router = useRouter();
@@ -90,6 +91,8 @@ export default function Home() {
   const dateObj = new Date(today);
   const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 
+  const growthData = fluencyProgress.length >= 2 ? calculateGrowthRate(fluencyProgress) : null;
+
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:p-8 bg-gray-50">
       <div className="w-full max-w-4xl flex justify-between items-center mb-6">
@@ -123,7 +126,7 @@ export default function Home() {
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
            {/* Left column: WcpmChart and Growth Rate */}
            <div className="col-span-1 lg:col-span-2 flex flex-col gap-6">
-             <GrowthRate growthData={{ growthRatePerWeek: 2.1, status: 'green' }} />
+             <GrowthRate growthData={growthData} />
              <div className="bg-white p-6 rounded-xl border shadow-sm h-full">
                <h4 className="text-lg font-bold mb-4 whitespace-nowrap">Fluency Progress (WCPM)</h4>
                <WcpmChart data={fluencyProgress} />

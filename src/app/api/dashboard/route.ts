@@ -42,21 +42,61 @@ export async function GET() {
       
     const fluencyDataReq = [...fluencyDataReqDesc].reverse();
 
+    // Calculate Streak
+    const allUserSessions = await db.select({ date: readingSessions.date, completedAt: readingSessions.completedAt })
+      .from(readingSessions)
+      .where(eq(readingSessions.userId, userId))
+      .orderBy(desc(readingSessions.date));
+
+    const uniqueDates = Array.from(new Set(
+      allUserSessions
+        .filter(s => s.completedAt !== null)
+        .map(s => {
+          try {
+            return new Date(s.date).toISOString().split('T')[0];
+          } catch (e) {
+            return s.date.split('T')[0];
+          }
+        })
+    ));
+
+    let streak = 0;
+    const today = new Date();
+    let checkDate = new Date(today);
+    let currentStr = checkDate.toISOString().split('T')[0];
+
+    if (uniqueDates.includes(currentStr)) {
+      streak++;
+      checkDate.setDate(checkDate.getDate() - 1);
+      currentStr = checkDate.toISOString().split('T')[0];
+    } else {
+      checkDate.setDate(checkDate.getDate() - 1);
+      currentStr = checkDate.toISOString().split('T')[0];
+      if (uniqueDates.includes(currentStr)) {
+        streak++;
+        checkDate.setDate(checkDate.getDate() - 1);
+        currentStr = checkDate.toISOString().split('T')[0];
+      }
+    }
+
+    if (streak > 0) {
+      while (uniqueDates.includes(currentStr)) {
+        streak++;
+        checkDate.setDate(checkDate.getDate() - 1);
+        currentStr = checkDate.toISOString().split('T')[0];
+      }
+    }
+
     const responsePayload = {
       today: new Date().toISOString(),
-      streak: 8, // hardcoded for MVP unless we calculate from sessions
+      streak: streak,
       currentLesson: {
         id: currentPattern?.id || 'unknown',
         name: currentPattern?.name || 'Lesson 1',
         type: 'New Concept',
         estTime: 12
       },
-      fluencyProgress: fluencyDataReq.length > 0 ? fluencyDataReq : [
-        { date: '2026-04-10', wcpm: 20 },
-        { date: '2026-04-11', wcpm: 22 },
-        { date: '2026-04-12', wcpm: 28 },
-        { date: '2026-04-14', wcpm: 30 }
-      ], // Fallback data
+      fluencyProgress: fluencyDataReq,
       sessionHistory: sessionHistoryReq.map(s => {
         const match = fluencyDataReqDesc.find(f => f.date === s.date);
         return {
